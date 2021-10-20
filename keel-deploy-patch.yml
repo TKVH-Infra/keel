@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: keel
+  namespace: "keel"
+  labels:
+    app: keel
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: keel
+  template:
+    metadata:
+      labels:
+        app: keel
+    spec:
+      serviceAccountName: keel
+      containers:
+      - name: keel
+        # Note that we use appVersion to get images tag.
+        env:
+          - name: BASIC_AUTH_USER
+            valueFrom:
+              secretKeyRef:
+                name: keel
+                key: BASIC_AUTH_USER
+          - name: BASIC_AUTH_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: keel
+                key: BASIC_AUTH_PASSWORD
+        volumeMounts:
+        - name: keel-secrets
+          mountPath: "/mnt/vault"
+          readOnly: true
+      volumes:
+      - name: keel-secrets
+        csi:
+          driver: "secrets-store.csi.k8s.io"
+          readOnly: true
+          volumeAttributes:
+            secretProviderClass: "keel"

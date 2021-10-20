@@ -1,0 +1,19 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: keel
+resources:
+  - https://sunstone.dev/keel?namespace=keel&username=admin&password=admin&tag=latest
+  - keel-ing.yml
+  - keel-spc.yml
+
+patches:
+  - keel-svc-patch.yml
+  - keel-deploy-patch.yml
+
+patchesJson6902:
+  - target:
+      group: apps
+      version: v1
+      kind: Deployment
+      name: keel
+    path: keel-deploy-patchjson.yml

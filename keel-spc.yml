@@ -1,0 +1,25 @@
+apiVersion: secrets-store.csi.x-k8s.io/v1alpha1
+kind: SecretProviderClass
+metadata:
+  name: keel
+spec:
+  provider: vault
+  secretObjects:
+  - secretName: keel
+    type: Opaque
+    data: 
+    - objectName: BASIC_AUTH_PASSWORD
+      key: BASIC_AUTH_PASSWORD
+    - objectName: BASIC_AUTH_USER
+      key: BASIC_AUTH_USER
+  parameters:
+    vaultAddress: 'http://vault.vault:8200'
+    vaultKubernetesMountPath: 'k8s-vault-csi'
+    roleName: keel
+    objects: |
+      - objectName: "BASIC_AUTH_USER"
+        secretPath: "apps-kv/data/keel/admin"
+        secretKey: "BASIC_AUTH_USER"
+      - objectName: "BASIC_AUTH_PASSWORD"
+        secretPath: "apps-kv/data/keel/admin"
+        secretKey: "BASIC_AUTH_PASSWORD"

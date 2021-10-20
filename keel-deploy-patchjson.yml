@@ -1,0 +1,4 @@
+- op: remove
+  path: /spec/template/spec/containers/0/env/0/value
+- op: remove
+  path: /spec/template/spec/containers/0/env/1/value
